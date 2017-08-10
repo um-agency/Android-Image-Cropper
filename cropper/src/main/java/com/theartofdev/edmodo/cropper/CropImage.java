@@ -434,6 +434,12 @@ public final class CropImage {
          */
         private final CropImageOptions mOptions;
 
+        /**
+         * Target activity class
+         */
+        @NonNull
+        private Class<? extends Activity> targetClass = CropImageActivity.class;
+
         private ActivityBuilder(@Nullable Uri source) {
             mSource = source;
             mOptions = new CropImageOptions();
@@ -443,7 +449,7 @@ public final class CropImage {
          * Get {@link CropImageActivity} intent to start the activity.
          */
         public Intent getIntent(@NonNull Context context) {
-            return getIntent(context, CropImageActivity.class);
+            return getIntent(context, targetClass);
         }
 
         /**
@@ -517,6 +523,14 @@ public final class CropImage {
         @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         public void start(@NonNull Context context, @NonNull android.app.Fragment fragment, @Nullable Class<?> cls) {
             fragment.startActivityForResult(getIntent(context, cls), CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+
+        /**
+         * Set target activity class to launch.
+         */
+        public ActivityBuilder setTargetClass(@NonNull final Class<? extends Activity> targetClass) {
+            this.targetClass = targetClass;
+            return this;
         }
 
         /**

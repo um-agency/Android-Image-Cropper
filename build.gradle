@@ -1,17 +1,22 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-    }
-}
+// ignore configuration exception
+try {
+    buildscript {
 
-allprojects {
-    repositories {
-        mavenLocal()
-        jcenter()
-        mavenCentral()
+        repositories {
+            jcenter()
+        }
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:2.3.3'
+        }
     }
+
+    allprojects {
+        repositories {
+            mavenLocal()
+            jcenter()
+            mavenCentral()
+        }
+    }
+} catch (ignored) {
 }
