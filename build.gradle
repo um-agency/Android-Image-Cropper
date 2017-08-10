@@ -1,22 +1,18 @@
-// ignore configuration exception
-try {
-    buildscript {
+buildscript {
 
-        repositories {
-            jcenter()
-        }
-
-        dependencies {
-            classpath 'com.android.tools.build:gradle:2.3.3'
-        }
+    repositories {
+        jcenter()
     }
 
-    allprojects {
-        repositories {
-            mavenLocal()
-            jcenter()
-            mavenCentral()
-        }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
-} catch (ignored) {
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+    }
 }
