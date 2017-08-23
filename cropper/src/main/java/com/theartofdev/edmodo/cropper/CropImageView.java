@@ -801,7 +801,8 @@ public class CropImageView extends FrameLayout {
         if (mOnCropImageCompleteListener == null) {
             throw new IllegalArgumentException("mOnCropImageCompleteListener is not set");
         }
-        startCropWorkerTask(reqWidth, reqHeight, options, null, null, 0);
+        startCropWorkerTask(reqWidth, reqHeight, options, null, null, 0,
+                0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     /**
@@ -812,7 +813,8 @@ public class CropImageView extends FrameLayout {
      * @param saveUri the Android Uri to save the cropped image to
      */
     public void saveCroppedImageAsync(Uri saveUri) {
-        saveCroppedImageAsync(saveUri, Bitmap.CompressFormat.JPEG, 90, 0, 0, RequestSizeOptions.NONE);
+        saveCroppedImageAsync(saveUri, Bitmap.CompressFormat.JPEG, 90, 0, 0, RequestSizeOptions.NONE,
+                0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     /**
@@ -824,7 +826,8 @@ public class CropImageView extends FrameLayout {
      * @param saveCompressQuality the quality (if applicable) to use when writing the image (0 - 100)
      */
     public void saveCroppedImageAsync(Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality) {
-        saveCroppedImageAsync(saveUri, saveCompressFormat, saveCompressQuality, 0, 0, RequestSizeOptions.NONE);
+        saveCroppedImageAsync(saveUri, saveCompressFormat, saveCompressQuality, 0, 0, RequestSizeOptions.NONE,
+                0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     /**
@@ -839,7 +842,8 @@ public class CropImageView extends FrameLayout {
      * @param reqHeight the height to resize the cropped image to
      */
     public void saveCroppedImageAsync(Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality, int reqWidth, int reqHeight) {
-        saveCroppedImageAsync(saveUri, saveCompressFormat, saveCompressQuality, reqWidth, reqHeight, RequestSizeOptions.RESIZE_INSIDE);
+        saveCroppedImageAsync(saveUri, saveCompressFormat, saveCompressQuality, reqWidth, reqHeight, RequestSizeOptions.RESIZE_INSIDE,
+                0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     /**
@@ -853,11 +857,14 @@ public class CropImageView extends FrameLayout {
      * @param reqHeight the height to resize the cropped image to (see options)
      * @param options the resize method to use, see its documentation
      */
-    public void saveCroppedImageAsync(Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality, int reqWidth, int reqHeight, RequestSizeOptions options) {
+    public void saveCroppedImageAsync(Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality,
+                                      int reqWidth, int reqHeight, RequestSizeOptions options,
+                                      int minReqWidth, int minReqHeight, int maxReqWidth, int maxReqHeight) {
         if (mOnCropImageCompleteListener == null) {
             throw new IllegalArgumentException("mOnCropImageCompleteListener is not set");
         }
-        startCropWorkerTask(reqWidth, reqHeight, options, saveUri, saveCompressFormat, saveCompressQuality);
+        startCropWorkerTask(reqWidth, reqHeight, options, saveUri, saveCompressFormat, saveCompressQuality,
+                minReqWidth, minReqHeight, maxReqWidth, maxReqHeight);
     }
 
     /**
@@ -1160,7 +1167,8 @@ public class CropImageView extends FrameLayout {
      * @param saveCompressFormat if saveUri is given, the given compression will be used for saving the image
      * @param saveCompressQuality if saveUri is given, the given quality will be used for the compression.
      */
-    public void startCropWorkerTask(int reqWidth, int reqHeight, RequestSizeOptions options, Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality) {
+    public void startCropWorkerTask(int reqWidth, int reqHeight, RequestSizeOptions options, Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality,
+                                    int minReqWidth, int minReqHeight, int maxReqWidth, int maxReqHeight) {
         if (mBitmap != null) {
             mImageView.clearAnimation();
 
@@ -1180,12 +1188,14 @@ public class CropImageView extends FrameLayout {
                         mDegreesRotated, orgWidth, orgHeight,
                         mCropOverlayView.isFixAspectRatio(), mCropOverlayView.getAspectRatioX(), mCropOverlayView.getAspectRatioY(),
                         reqWidth, reqHeight, mFlipHorizontally, mFlipVertically, options,
-                        saveUri, saveCompressFormat, saveCompressQuality));
+                        saveUri, saveCompressFormat, saveCompressQuality,
+                        minReqWidth, minReqHeight, maxReqWidth, maxReqHeight));
             } else {
                 mBitmapCroppingWorkerTask = new WeakReference<>(new BitmapCroppingWorkerTask(this, mBitmap, getCropPoints(), mDegreesRotated,
                         mCropOverlayView.isFixAspectRatio(), mCropOverlayView.getAspectRatioX(), mCropOverlayView.getAspectRatioY(),
                         reqWidth, reqHeight, mFlipHorizontally, mFlipVertically, options,
-                        saveUri, saveCompressFormat, saveCompressQuality));
+                        saveUri, saveCompressFormat, saveCompressQuality,
+                        minReqWidth, minReqHeight, maxReqWidth, maxReqHeight));
             }
             mBitmapCroppingWorkerTask.get().execute();
             setProgressBarVisibility();

@@ -145,11 +145,11 @@ public final class CropImage {
      * Same as {@link #startPickImageActivity(Activity) startPickImageActivity} method but instead
      * of being called and returning to an Activity, this method can be called and return to a Fragment.
      *
-     * @param context The Fragments context. Use getContext()
+     * @param context  The Fragments context. Use getContext()
      * @param fragment The calling Fragment to start and return the image to
      */
     public static void startPickImageActivity(@NonNull Context context, @NonNull Fragment fragment) {
-        fragment.startActivityForResult(getPickImageChooserIntent(context),PICK_IMAGE_CHOOSER_REQUEST_CODE);
+        fragment.startActivityForResult(getPickImageChooserIntent(context), PICK_IMAGE_CHOOSER_REQUEST_CODE);
     }
 
     /**
@@ -169,10 +169,10 @@ public final class CropImage {
      * The source can be camera's  (ACTION_IMAGE_CAPTURE) or gallery's (ACTION_GET_CONTENT).<br>
      * All possible sources are added to the intent chooser.
      *
-     * @param context used to access Android APIs, like content resolve, it is your activity/fragment/widget.
-     * @param title the title to use for the chooser UI
+     * @param context          used to access Android APIs, like content resolve, it is your activity/fragment/widget.
+     * @param title            the title to use for the chooser UI
      * @param includeDocuments if to include KitKat documents activity containing all sources
-     * @param includeCamera if to include camera intents
+     * @param includeCamera    if to include camera intents
      */
     public static Intent getPickImageChooserIntent(@NonNull Context context, CharSequence title, boolean includeDocuments, boolean includeCamera) {
 
@@ -216,7 +216,7 @@ public final class CropImage {
      * just you use
      * the Uri passed to this method.
      *
-     * @param context used to access Android APIs, like content resolve, it is your activity/fragment/widget.
+     * @param context       used to access Android APIs, like content resolve, it is your activity/fragment/widget.
      * @param outputFileUri the Uri where the picture will be placed.
      */
     public static Intent getCameraIntent(@NonNull Context context, Uri outputFileUri) {
@@ -335,7 +335,7 @@ public final class CropImage {
      * Will return the correct URI for camera and gallery image.
      *
      * @param context used to access Android APIs, like content resolve, it is your activity/fragment/widget.
-     * @param data the returned data of the  activity result
+     * @param data    the returned data of the  activity result
      */
     public static Uri getPickImageResultUri(@NonNull Context context, @Nullable Intent data) {
         boolean isCamera = true;
@@ -353,7 +353,7 @@ public final class CropImage {
      * do we get an exception when we try, Android is awesome.
      *
      * @param context used to access Android APIs, like content resolve, it is your activity/fragment/widget.
-     * @param uri the result URI of image pick.
+     * @param uri     the result URI of image pick.
      * @return true - required permission are not granted, false - either no need for permissions or they are granted
      */
     public static boolean isReadExternalStoragePermissionsRequired(@NonNull Context context, @NonNull Uri uri) {
@@ -367,7 +367,7 @@ public final class CropImage {
      * Only relevant for API version 23 and above.
      *
      * @param context used to access Android APIs, like content resolve, it is your activity/fragment/widget.
-     * @param uri the result URI of image pick.
+     * @param uri     the result URI of image pick.
      */
     public static boolean isUriRequiresPermissions(@NonNull Context context, @NonNull Uri uri) {
         try {
@@ -911,6 +911,26 @@ public final class CropImage {
          */
         public ActivityBuilder setFlipVertically(boolean flipVertically) {
             mOptions.flipVertically = flipVertically;
+            return this;
+        }
+
+        /**
+         * the min size the resulting cropping image is cropped (in pixels).<br>
+         * <i>Default: 0px, 0px</i>
+         */
+        public ActivityBuilder setMinCropResultImageSize(int minCropResultWidth, int minCropResultHeight) {
+            mOptions.minCropResultImageWidth = minCropResultWidth;
+            mOptions.minCropResultImageHeight = minCropResultHeight;
+            return this;
+        }
+
+        /**
+         * the max size the resulting cropping image is cropped (in pixels).<br>
+         * <i>Default: {@link Integer#MAX_VALUE}px, {@link Integer#MAX_VALUE}px</i>
+         */
+        public ActivityBuilder setMaxCropResultImageSize(int maxCropResultWidth, int maxCropResultHeight) {
+            mOptions.maxCropResultImageWidth = maxCropResultWidth;
+            mOptions.maxCropResultImageHeight = maxCropResultHeight;
             return this;
         }
     }

@@ -120,12 +120,33 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
      * the quality (if applicable) to use when writing the image (0 - 100)
      */
     private final int mSaveCompressQuality;
+
+    /**
+     * the min width the resulting cropping image is cropped. (in pixels)
+     */
+    public final int minCropResultImageWidth;
+
+    /**
+     * the min height the resulting cropping image is cropped. (in pixels)
+     */
+    public final int minCropResultImageHeight;
+
+    /**
+     * the max width the resulting cropping image is cropped. (in pixels)
+     */
+    public final int maxCropResultImageWidth;
+
+    /**
+     * the max height the resulting cropping image is cropped. (in pixels)
+     */
+    public final int maxCropResultImageHeight;
     //endregion
 
     BitmapCroppingWorkerTask(CropImageView cropImageView, Bitmap bitmap, float[] cropPoints,
                              int degreesRotated, boolean fixAspectRatio, int aspectRatioX, int aspectRatioY,
                              int reqWidth, int reqHeight, boolean flipHorizontally, boolean flipVertically, CropImageView.RequestSizeOptions options,
-                             Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality) {
+                             Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality,
+                             int minReqWidth, int minReqHeight, int maxReqWidth, int maxReqHeight) {
 
         mCropImageViewReference = new WeakReference<>(cropImageView);
         mContext = cropImageView.getContext();
@@ -146,13 +167,18 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
         mSaveCompressQuality = saveCompressQuality;
         mOrgWidth = 0;
         mOrgHeight = 0;
+        minCropResultImageWidth = minReqWidth;
+        minCropResultImageHeight = minReqHeight;
+        maxCropResultImageWidth = maxReqWidth;
+        maxCropResultImageHeight = maxReqHeight;
     }
 
     BitmapCroppingWorkerTask(CropImageView cropImageView, Uri uri, float[] cropPoints,
                              int degreesRotated, int orgWidth, int orgHeight,
                              boolean fixAspectRatio, int aspectRatioX, int aspectRatioY, int reqWidth, int reqHeight,
                              boolean flipHorizontally, boolean flipVertically, CropImageView.RequestSizeOptions options,
-                             Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality) {
+                             Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality,
+                             int minReqWidth, int minReqHeight, int maxReqWidth, int maxReqHeight) {
 
         mCropImageViewReference = new WeakReference<>(cropImageView);
         mContext = cropImageView.getContext();
@@ -173,6 +199,10 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
         mSaveCompressFormat = saveCompressFormat;
         mSaveCompressQuality = saveCompressQuality;
         mBitmap = null;
+        minCropResultImageWidth = minReqWidth;
+        minCropResultImageHeight = minReqHeight;
+        maxCropResultImageWidth = maxReqWidth;
+        maxCropResultImageHeight = maxReqHeight;
     }
 
     /**
@@ -204,7 +234,13 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
                     return new Result((Bitmap) null, 1);
                 }
 
-                Bitmap bitmap = BitmapUtils.resizeBitmap(bitmapSampled.bitmap, mReqWidth, mReqHeight, mReqSizeOptions);
+                int reqWidth = mReqWidth;
+                int reqHeight = mReqHeight;
+                if (reqWidth == 0 || reqHeight == 0) {
+                    reqWidth = Math.max(minCropResultImageWidth, Math.min(bitmapSampled.bitmap.getWidth(), maxCropResultImageWidth));
+                    reqHeight = Math.max(minCropResultImageHeight, Math.min(bitmapSampled.bitmap.getHeight(), maxCropResultImageHeight));
+                }
+                Bitmap bitmap = BitmapUtils.resizeBitmap(bitmapSampled.bitmap, reqWidth, reqHeight, mReqSizeOptions);
 
                 if (mSaveUri == null) {
                     return new Result(bitmap, bitmapSampled.sampleSize);

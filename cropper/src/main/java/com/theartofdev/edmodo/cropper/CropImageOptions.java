@@ -282,6 +282,26 @@ public class CropImageOptions implements Parcelable {
     public boolean flipVertically;
 
     /**
+     * the min width the resulting cropping image is cropped. (in pixels)
+     */
+    public int minCropResultImageWidth;
+
+    /**
+     * the min height the resulting cropping image is cropped. (in pixels)
+     */
+    public int minCropResultImageHeight;
+
+    /**
+     * the max width the resulting cropping image is cropped. (in pixels)
+     */
+    public int maxCropResultImageWidth;
+
+    /**
+     * the max height the resulting cropping image is cropped. (in pixels)
+     */
+    public int maxCropResultImageHeight;
+
+    /**
      * Init options with defaults.
      */
     public CropImageOptions() {
@@ -341,6 +361,11 @@ public class CropImageOptions implements Parcelable {
         rotationDegrees = 90;
         flipHorizontally = false;
         flipVertically = false;
+
+        minCropResultImageWidth = 0;
+        minCropResultImageHeight = 0;
+        maxCropResultImageWidth = Integer.MAX_VALUE;
+        maxCropResultImageHeight = Integer.MAX_VALUE;
     }
 
     /**
@@ -393,6 +418,11 @@ public class CropImageOptions implements Parcelable {
         rotationDegrees = in.readInt();
         flipHorizontally = in.readByte() != 0;
         flipVertically = in.readByte() != 0;
+
+        minCropResultImageWidth = in.readInt();
+        minCropResultImageHeight = in.readInt();
+        maxCropResultImageWidth = in.readInt();
+        maxCropResultImageHeight = in.readInt();
     }
 
     @Override
@@ -443,6 +473,10 @@ public class CropImageOptions implements Parcelable {
         dest.writeInt(rotationDegrees);
         dest.writeByte((byte) (flipHorizontally ? 1 : 0));
         dest.writeByte((byte) (flipVertically ? 1 : 0));
+        dest.writeInt(minCropResultImageWidth);
+        dest.writeInt(minCropResultImageHeight);
+        dest.writeInt(maxCropResultImageWidth);
+        dest.writeInt(maxCropResultImageHeight);
     }
 
     @Override

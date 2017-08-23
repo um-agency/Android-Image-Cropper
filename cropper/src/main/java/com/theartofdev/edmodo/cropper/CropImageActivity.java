@@ -262,7 +262,11 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
                     mOptions.outputCompressQuality,
                     mOptions.outputRequestWidth,
                     mOptions.outputRequestHeight,
-                    mOptions.outputRequestSizeOptions);
+                    mOptions.outputRequestSizeOptions,
+                    mOptions.minCropResultImageWidth,
+                    mOptions.minCropResultImageHeight,
+                    mOptions.maxCropResultImageWidth,
+                    mOptions.maxCropResultImageHeight);
         }
     }
 
