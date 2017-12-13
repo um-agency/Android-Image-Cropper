@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion project.targetSdkVersion
         versionCode 1
         versionName '2.4.7'
     }
@@ -25,9 +25,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile('com.android.support:exifinterface:25.4.0') {
-        transitive = false
-    }
+    api "com.android.support:appcompat-v7:$support"
+    api "com.android.support:exifinterface:$support"
 }
 
